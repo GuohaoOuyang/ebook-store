@@ -1,16 +1,25 @@
-import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import styled from "styled-components";
 
+const StyledContainer = styled(Container)`
+  font-family: "Metropolis";
+  color: ${(props) => props.theme.palette.lightblack};
+  font-size: 0.8em;
+  margin-left: 20vw;
+`;
 const Footer = () => {
   return (
     <footer>
-      <Container>
+      <StyledContainer fluid="true">
         <Row>
-          <Col className='text-center py-3'>Copyright &copy; Fair</Col>
+          <Col className="py-3">
+            &copy; 2021 Fair, Inc. All rights reserved.
+          </Col>
         </Row>
-      </Container>
+      </StyledContainer>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

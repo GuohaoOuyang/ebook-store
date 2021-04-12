@@ -1,37 +1,57 @@
-import React, { useEffect } from 'react'
-import { Jumbotron, Button, Container } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import Loader from './Loader'
-import Message from './Message'
-import { listTopProducts } from '../actions/productActions'
+import React from "react";
+import { Jumbotron } from "react-bootstrap";
+import styled from "styled-components";
+import bookImage from "../utils/images/book.jpeg";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+const StyledJumbotron = styled(Jumbotron)`
+  background-image: url(${bookImage});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 0 20%;
+  // background-attachment: fixed;
+  height: 80vh;
+  text-align: center;
+  h1 {
+    font-family: "Big Caslon";
+    color: ${(props) => props.theme.palette.primary};
+    font-size: 3em;
+  }
+  p {
+    color: ${(props) => props.theme.palette.primary};
+    font-family: "Metropolis";
+  }
+  button {
+    background-color: white;
+    color: ${(props) => props.theme.palette.lightblack};
+    font-family: "Metropolis";
+    font-size: 0.8em;
+    border-style: none;
+    outline: none !important;
+    margin-top: 1em;
+    padding: 1em 4em;
+  }
+`;
 
 const ProductBanner = () => {
-  const dispatch = useDispatch()
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const productTopRated = useSelector((state) => state.productTopRated)
-  const { loading, error, products } = productTopRated
+  return (
+    <StyledJumbotron
+      fluid="true"
+      className="d-flex flex-column align-items-center justify-content-center">
+      <h1>Your one-stop shop </h1>
+      <h1>for books</h1>
+      <p>Shop New &amp; Hot books, all in one place.</p>
+      {!userInfo && (
+        <Link to="/register">
+          <button>Sign Up to Shop</button>
+        </Link>
+      )}
+    </StyledJumbotron>
+  );
+};
 
-  useEffect(() => {
-    dispatch(listTopProducts())
-  }, [dispatch])
-
-  return loading ? (
-    <Loader />
-  ) : error ? (
-    <Message variant='danger'>{error}</Message>
-  ) : (
-    <Jumbotron style={{backgroundSize:'contain',backgroundPosition:'right', backgroundRepeat:'no-repeat',backgroundImage:`url(${products.image})`}}>
-      <Container>
-        <h1>{products.name}</h1>  
-        <p>
-          {products.description}
-        </p>
-        <p>
-          <Button href={`/product/${products._id}`} variant="primary" >Learn more</Button>
-        </p>
-      </Container>
-    </Jumbotron>
-  )
-}
-
-export default ProductBanner
+export default ProductBanner;

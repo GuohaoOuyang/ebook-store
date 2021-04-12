@@ -1,32 +1,63 @@
-import React, { useState } from 'react'
-import { Form } from 'react-bootstrap'
-import { SearchIcon } from 'react-line-awesome'
+import React, { useState } from "react";
+import { Form } from "react-bootstrap";
+import { SearchIcon } from "react-line-awesome";
+import styled from "styled-components";
 
+const StyledButton = styled.button`
+  border: none;
+  cursor: pointer;
+  outline: none;
+  background-color: transparent;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #eaeaea;
+  padding: 2px;
+  width: 30%;
+`;
+
+const StyledInput = styled.input`
+  flex-grow: 2;
+  border: none;
+  background-color: ${(props) => props.theme.palette.primary};
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    font-family: "Metropolis";
+    font-size: 0.8em;
+  }
+`;
 
 const SearchBox = ({ history }) => {
-  const [keyword, setKeyword] = useState('')
+  const [keyword, setKeyword] = useState("");
 
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (keyword.trim()) {
-      history.push(`/search/${keyword}`)
+      history.push(`/search/${keyword}`);
     } else {
-      history.push('/')
+      history.push("/");
     }
-  }
+  };
 
   return (
-    <Form onSubmit={submitHandler} inline className='ml-auto' style={{position:'relative'}}> 
-      <Form.Control
-        type='text'
+    <StyledForm onSubmit={submitHandler} className="mr-auto searchbox">
+      <StyledInput
+        // type="text"
         onChange={(e) => setKeyword(e.target.value)}
-        placeholder= 'SEARCH'
-        className='mr-sm-2 ml-sm-5'
-        style={{borderRadius:'1rem',outline:'none'}}
-      ></Form.Control>
-      <button style={{border:'none', position:'absolute', right:'0.5rem', cursor:'pointer', outline:'none', backgroundColor:'transparent'}} type='submit'><SearchIcon className='la-lg'/></button>
-    </Form>
-  )
-}
+        placeholder="Search for a book name"
+      />
+      <StyledButton>
+        <SearchIcon />
+      </StyledButton>
+    </StyledForm>
+  );
+};
 
-export default SearchBox
+export default SearchBox;

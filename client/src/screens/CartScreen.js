@@ -1,44 +1,53 @@
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, ListGroup, Image, Button, Card } from 'react-bootstrap'
-import Message from '../components/Message'
-import { addToCart, removeFromCart } from '../actions/cartActions'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap";
+import Message from "../components/Message";
+import { addToCart, removeFromCart } from "../actions/cartActions";
+import SigninModal from "../components/SigninModal";
 
 const CartScreen = ({ match, location, history }) => {
-  const productId = match.params.id
+  const productId = match.params.id;
 
-  const qty = location.search ? Number(location.search.split('=')[1]) : 1
+  const qty = location.search ? Number(location.search.split("=")[1]) : 1;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const [modalShow, setModalShow] = useState(false);
 
-  const cart = useSelector((state) => state.cart)
-  const { cartItems } = cart
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   useEffect(() => {
     if (productId) {
-      dispatch(addToCart(productId, qty))
+      dispatch(addToCart(productId, qty));
     }
-  }, [dispatch, productId, qty])
+  }, [dispatch, productId, qty]);
 
   const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id))
-  }
+    dispatch(removeFromCart(id));
+  };
 
   const checkoutHandler = () => {
-    history.push('/login?redirect=shipping')
-  }
+    if (userInfo) {
+      history.push("/shipping");
+    } else {
+      setModalShow(true);
+    }
+  };
 
   return (
     <Row>
       <Col md={8}>
-        <h1 style={{fontSize:'2rem'}}>Shopping Cart</h1>
+        <h1 style={{ fontSize: "2rem" }}>Shopping Cart</h1>
         {cartItems.length === 0 ? (
           <Message>
-            Your cart is empty <Link to='/'>Go Back</Link>
+            Your cart is empty <Link to="/">Go Back</Link>
           </Message>
         ) : (
-          <ListGroup variant='flush'>
+          <ListGroup variant="flush">
             {cartItems.map((item) => (
               <ListGroup.Item key={item.product}>
                 <Row>
@@ -48,14 +57,15 @@ const CartScreen = ({ match, location, history }) => {
                   <Col md={3}>
                     <Link to={`/product/${item.product}`}>{item.name}</Link>
                   </Col>
-                  <Col md={3} className="text-center">${item.price}</Col>
+                  <Col md={3} className="text-center">
+                    ${item.price}
+                  </Col>
                   <Col md={3} className="text-center">
                     <Button
-                      type='button'
-                      variant='light'
-                      onClick={() => removeFromCartHandler(item.product)}
-                    >
-                      <i className='fas fa-trash'></i>
+                      type="button"
+                      variant="light"
+                      onClick={() => removeFromCartHandler(item.product)}>
+                      <i className="fas fa-trash"></i>
                     </Button>
                   </Col>
                 </Row>
@@ -64,9 +74,9 @@ const CartScreen = ({ match, location, history }) => {
           </ListGroup>
         )}
       </Col>
-      <Col md={4} className='py-5'>
+      <Col md={4} className="py-5">
         <Card>
-          <ListGroup variant='flush'>
+          <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
@@ -79,19 +89,22 @@ const CartScreen = ({ match, location, history }) => {
             </ListGroup.Item>
             <ListGroup.Item>
               <Button
-                type='button'
-                className='btn-block'
+                type="button"
+                className="btn-block"
                 disabled={cartItems.length === 0}
-                onClick={checkoutHandler}
-              >
+                onClick={() => checkoutHandler()}>
                 Proceed To Checkout
               </Button>
+              <SigninModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+              />
             </ListGroup.Item>
           </ListGroup>
         </Card>
       </Col>
     </Row>
-  )
-}
+  );
+};
 
-export default CartScreen
+export default CartScreen;

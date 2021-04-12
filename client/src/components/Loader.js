@@ -1,21 +1,13 @@
-import React from 'react'
-import { Spinner } from 'react-bootstrap'
+import React from "react";
+import { Spinner } from "react-bootstrap";
+import styled from "styled-components";
+
+const StyledLoader = styled(Spinner)`
+  font-size: 0.5em;
+`;
 
 const Loader = () => {
-  return (
-    <Spinner
-      animation='border'
-      role='status'
-      style={{
-        width: '100px',
-        height: '100px',
-        margin: 'auto',
-        display: 'block',
-      }}
-    >
-      <span className='sr-only'>Loading...</span>
-    </Spinner>
-  )
-}
+  return <StyledLoader animation="border" role="status"></StyledLoader>;
+};
 
-export default Loader
+export default Loader;

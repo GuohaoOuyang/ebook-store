@@ -1,12 +1,12 @@
 {
   "name": "fair",
   "version": "1.0.0",
-  "description": "fair e-resource trade cluster",
-  "main": "server.js",
+  "description": "mock ecommerce solution",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/server",
-    "server": "nodemon backend/server",
+    "start": "node server/app",
+    "server": "nodemon server/app",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"

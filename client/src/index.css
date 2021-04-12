@@ -1,24 +1,21 @@
+@font-face {
+  font-family: "Metropolis";
+  src: local("Metropolis"),
+    url(./utils/fonts/Metropolis-Regular.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "Sentinel";
+  src: local("Sentinel"),
+    url(./utils/fonts/Sentinel-Medium.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Big Caslon";
+  src: local("Big Caslon"),
+    url(./utils/fonts/Big-Caslon-Medium.ttf) format("truetype");
+}
+
 main {
-  min-height: 85vh;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-}
-
-h3 {
-  padding: 1rem 0;
-}
-
-h1 {
-  font-size: 1.8rem;
-  padding: 1rem 0;
-}
-
-h2 {
-  font-size: 1.4rem;
-  padding: 0.5rem 0;
-}
-
-.rating span {
-  margin: 0.07rem;
+  min-height: 93vh;
 }

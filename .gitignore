@@ -6,11 +6,17 @@ node_modules/
 /.pnp
 .pnp.js
 
+.fair.pem
+
+.Procfile
+
 # testing
 /coverage
 
 # production
-/frontend/build
+client/build
+client/node_modules
+client/README.md
 
 # misc
 .DS_Store

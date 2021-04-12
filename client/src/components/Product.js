@@ -1,33 +1,46 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Card } from 'react-bootstrap'
-import Rating from './Rating'
+import React from "react";
+import { Link } from "react-router-dom";
+import { Card } from "react-bootstrap";
+import styled from "styled-components";
 
+const StyledCard = styled(Card)`
+  .link {
+    text-decoration: none;
+  }
+  .title {
+    min-height: 3em;
+    color: ${(props) => props.theme.palette.lightblack};
+    font-family: "Metropolis";
+    font-size: 0.8em;
+  }
+  .price {
+    color: ${(props) => props.theme.palette.lightblack};
+    font-family: "Sentinel";
+    font-size: 0.8em;
+  }
+`;
 const Product = ({ product }) => {
   return (
-    <Card border="light" className='my-3 p-3 rounded'>
+    <StyledCard border="light" className="my-3">
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant='top' />
+        <Card.Img src={product.image} variant="top" />
       </Link>
-
       <Card.Body>
-        <Link to={`/product/${product._id}`}>
-          <Card.Title as='div'>
-            <strong style={{fontSize:'0.8rem'}}>{product.name}</strong>
+        <Link className="link" to={`/product/${product._id}`}>
+          <Card.Title className="title" as="div">
+            <strong>{product.name}</strong>
           </Card.Title>
         </Link>
-
-        <Card.Text as='div'>
-          <Rating
-            value={product.rating}
-            text={product.numReviews} 
-          />
+        <Card.Text as="h3" className="price">
+          MSRP <span>${product.price}</span>
         </Card.Text>
-
-        <Card.Text as='h3' style={{fontSize:'0.8rem'}}>Fair Price: <span style={{color:'rgb(172,45,19)'}}>${product.price}</span></Card.Text>
+        <hr className="mt-1 mb-3" />
+        <Card.Text as="h3" className="title">
+          <strong>By Aidan</strong>
+        </Card.Text>
       </Card.Body>
-    </Card>
-  )
-}
+    </StyledCard>
+  );
+};
 
-export default Product
+export default Product;
