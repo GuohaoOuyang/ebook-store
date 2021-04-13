@@ -6,9 +6,9 @@ node_modules/
 /.pnp
 .pnp.js
 
-fair.pem
+.fair.pem
 
-Procfile
+.Procfile
 
 # testing
 /coverage

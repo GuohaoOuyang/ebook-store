@@ -10,8 +10,7 @@ const StyledJumbotron = styled(Jumbotron)`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 0 20%;
-  // background-attachment: fixed;
-  height: 80vh;
+  height: 800px;
   text-align: center;
   h1 {
     font-family: "Big Caslon";

@@ -29,7 +29,8 @@ const StyledLoader = styled.div`
 const StyledRow = styled(Row)`
   margin-left: 20vw;
   margin-right: 20vw;
-  height: 800px;
+  margin-top: 200px;
+  // height: 800px;
 `;
 
 const ProductScreen = ({ history, match }) => {
@@ -84,15 +85,23 @@ const ProductScreen = ({ history, match }) => {
           <Loader />
         </StyledLoader>
       ) : error ? (
-        <Message variant="danger">{error}</Message>
+        <Row>
+          <Col>
+            <Message variant="danger">{error}</Message>
+          </Col>
+        </Row>
       ) : (
         <>
           <Meta title={product.name} />
-          <StyledRow className="my-5 ">
-            <Col md={3}>
+          <StyledRow className="d-flex ">
+            <Col
+              md={6}
+              className="pl-0 pr-0 d-flex align-items-center justify-content-center">
               <Image src={product.image} alt={product.name} fluid />
             </Col>
-            <Col md={6}>
+            <Col
+              md={6}
+              className="pl-0 pr-0 d-flex align-items-center justify-content-center">
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
@@ -109,7 +118,7 @@ const ProductScreen = ({ history, match }) => {
                 </ListGroup.Item>
               </ListGroup>
             </Col>
-            <Col md={3}>
+            {/* <Col md={3}>
               <Card>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
@@ -131,7 +140,7 @@ const ProductScreen = ({ history, match }) => {
                   </ListGroup.Item>
                 </ListGroup>
               </Card>
-            </Col>
+            </Col> */}
           </StyledRow>
           <Row className="py-3">
             <Col md={6}>

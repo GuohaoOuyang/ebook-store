@@ -22,11 +22,6 @@ const Message = ({ variant, head, children }) => {
       <Container fluid="true">
         <Alert.Heading className="head">{head}</Alert.Heading>
         <p className="children">{children}</p>
-        {/* {children.map((c, index) => (
-          <p className="children" key={index}>
-            {c}
-          </p>
-        ))} */}
       </Container>
     </StyledAlert>
   );
