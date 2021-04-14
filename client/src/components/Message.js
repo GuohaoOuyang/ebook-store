@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Container } from "react-bootstrap";
+import { Alert, Container, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
 
 const StyledAlert = styled(Alert)`
@@ -16,14 +16,22 @@ const StyledAlert = styled(Alert)`
   }
 `;
 
+const StyledRow = styled(Row)`
+  margin-top: 20px;
+`;
+
 const Message = ({ variant, head, children }) => {
   return (
-    <StyledAlert variant={variant}>
-      <Container fluid="true">
-        <Alert.Heading className="head">{head}</Alert.Heading>
-        <p className="children">{children}</p>
-      </Container>
-    </StyledAlert>
+    <StyledRow>
+      <Col>
+        <StyledAlert variant={variant}>
+          <Container fluid="true">
+            <Alert.Heading className="head">{head}</Alert.Heading>
+            <p className="children">{children}</p>
+          </Container>
+        </StyledAlert>
+      </Col>
+    </StyledRow>
   );
 };
 

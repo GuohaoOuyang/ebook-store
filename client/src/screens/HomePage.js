@@ -59,7 +59,9 @@ const HomeScreen = ({ match }) => {
             <Loader />
           </StyledLoader>
         ) : error ? (
-          <Message variant="danger">{error}</Message>
+          <Message variant="danger" head="oops">
+            seems like a connection issue
+          </Message>
         ) : products.length > 0 ? (
           <>
             <StyledRow>

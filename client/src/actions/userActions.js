@@ -26,6 +26,7 @@ import {
   USER_UPDATE_REQUEST,
 } from "../constants/userConstants";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstants";
+import { CART_SAVE_SHIPPING_ADDRESS } from "../constants/cartConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -48,6 +49,11 @@ export const login = (email, password) => async (dispatch) => {
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data,
+    });
+
+    dispatch({
+      type: CART_SAVE_SHIPPING_ADDRESS,
+      payload: data.email,
     });
 
     localStorage.setItem("userInfo", JSON.stringify(data));
