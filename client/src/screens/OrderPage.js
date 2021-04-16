@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { Link } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Button,
+  Alert,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../components/Message";
 import Loader from "../components/Loader";
+import styled from "styled-components";
+import Snackbar from "../components/Snackbar";
 import {
   getOrderDetails,
   payOrder,
@@ -15,6 +23,58 @@ import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
 } from "../constants/orderConstants";
+
+const StyledRow = styled(Row)`
+  margin-left: 20vw;
+  margin-right: 20vw;
+  padding-top: 120px;
+  padding-bottom: 80px;
+  color: ${(props) => props.theme.palette.lightblack};
+
+  p {
+    font-family: "Metropolis"
+    font-size: 0.8em;
+    color:  ${(props) => props.theme.palette.lightblack};
+  }
+
+  .leftside {
+    padding: 0;
+  }
+
+  .alertTitle {
+    background-color: rgb(247, 248, 251);
+    font-family: "Big Caslon";
+    font-size: 1.2em;
+  }
+
+  .card {
+    border: none;
+  }
+
+  .summaryRow {
+    font-family: "Metropolis";
+    font-size: 1em;
+    background-color: rgb(247, 248, 251);
+    color: ${(props) => props.theme.palette.lightblack};
+  }
+
+  .title {
+    font-family: "Metropolis";
+    font-size: 0.8em;
+    color: ${(props) => props.theme.palette.lightblack};
+    margin-bottom: 1em;
+  }
+  .price {
+    font-family: "Metropolis";
+    font-size: 0.8em;
+    color: ${(props) => props.theme.palette.lightblack};
+  }
+`;
+
+const StyledLoader = styled.div`
+  margin-top: 20%;
+  text-align: center;
+`;
 
 const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
@@ -34,17 +94,6 @@ const OrderScreen = ({ match, history }) => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  if (!loading) {
-    //   Calculate prices
-    const addDecimals = (num) => {
-      return (Math.round(num * 100) / 100).toFixed(2);
-    };
-
-    order.itemsPrice = addDecimals(
-      order.orderItems.reduce((acc, item) => acc + item.price * 1, 0)
-    );
-  }
 
   useEffect(() => {
     if (!userInfo) {
@@ -73,12 +122,14 @@ const OrderScreen = ({ match, history }) => {
       } else {
         setSdkReady(true);
       }
+    } else if (order.isPaid) {
+      history.push(`/order/${order._id}/success`);
     }
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, orderId, successPay, successDeliver, order]);
 
   const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
   };
 
@@ -87,106 +138,85 @@ const OrderScreen = ({ match, history }) => {
   };
 
   return loading ? (
-    <Loader />
+    <StyledLoader>
+      <Loader />
+    </StyledLoader>
+  ) : loadingPay ? (
+    <StyledLoader>
+      <Loader />
+    </StyledLoader>
   ) : error ? (
-    <Message variant="danger">{error}</Message>
+    <Snackbar show={true}>{error}</Snackbar>
   ) : (
     <>
-      <h1>Order {order._id}</h1>
-      <Row>
+      <StyledRow>
         <Col md={8}>
           <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h2>Shipped To</h2>
-              <p>
-                <strong>Name: </strong> {order.user.name}
-              </p>
-              <p>
-                <strong>Designated Email: </strong>
-                {order.shippingAddress.address}
-              </p>
-              {order.isDelivered ? (
-                <Message variant="success">
-                  Delivered on {order.deliveredAt}
-                </Message>
-              ) : (
-                <Message variant="warning">Not Delivered</Message>
-              )}
+            <ListGroup.Item className="border-0 leftside">
+              <Alert className="alertTitle">
+                <Row>
+                  <Col>Shipping Address</Col>
+                </Row>
+              </Alert>
+              <Alert variant="light">
+                <p>{order.shippingAddress} </p>{" "}
+              </Alert>
             </ListGroup.Item>
-
-            <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <p>
-                <strong>Method: </strong>
-                {order.paymentMethod}
-              </p>
-              {order.isPaid ? (
-                <Message variant="success">Paid on {order.paidAt}</Message>
-              ) : (
-                <Message variant="warning">Not Paid</Message>
-              )}
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <h2>Order Items</h2>
-              {order.orderItems.length === 0 ? (
-                <Message>Order is empty</Message>
-              ) : (
-                <ListGroup variant="flush">
-                  {order.orderItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
-                      <Row>
-                        <Col md={1}>
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fluid
-                            rounded
-                          />
-                        </Col>
-                        <Col>
-                          <Link to={`/product/${item.product}`}>
-                            {item.name}
-                          </Link>
-                        </Col>
-                        <Col md={4}>
-                          1 x ${item.price} = ${1 * item.price}
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
+            <ListGroup.Item className="border-0 leftside">
+              <Alert className="alertTitle">Review Open Orders</Alert>
+              <ListGroup variant="flush">
+                {order.orderItems.map((item, index) => (
+                  <ListGroup.Item key={index}>
+                    <Row>
+                      <Col md={2}>
+                        <Image src={item.image} alt={item.name} fluid rounded />
+                      </Col>
+                      <Col md={8}>
+                        <Row className="title">{item.name}</Row>
+                        <Row className="title">By Aidan</Row>
+                      </Col>
+                      <Col md={2} className="price">
+                        ${item.price}
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
             </ListGroup.Item>
           </ListGroup>
         </Col>
         <Col md={4}>
-          <Card>
+          <Card className="card">
             <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
+              <ListGroup.Item className="alertTitle text-center border-0">
+                Order Summary
               </ListGroup.Item>
-              <ListGroup.Item>
+              <ListGroup.Item className="border-0 summaryRow">
                 <Row>
-                  <Col>Items</Col>
-                  <Col>${order.itemsPrice}</Col>
+                  <Col>Subtotal</Col>
+                  <Col className="d-flex justify-content-end">
+                    ${order.itemsPrice}
+                  </Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item>
+              <ListGroup.Item className="summaryRow">
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${order.taxPrice}</Col>
+                  <Col className="d-flex justify-content-end">
+                    ${order.taxPrice}
+                  </Col>
                 </Row>
               </ListGroup.Item>
-              <ListGroup.Item>
+              <ListGroup.Item className="summaryRow border-0">
                 <Row>
                   <Col>Total</Col>
-                  <Col>${order.totalPrice}</Col>
+                  <Col className="d-flex justify-content-end">
+                    ${order.totalPrice}
+                  </Col>
                 </Row>
               </ListGroup.Item>
               {!order.isPaid && (
-                <ListGroup.Item>
-                  {loadingPay && <Loader />}
+                <ListGroup.Item className="summaryRow border-0">
                   {!sdkReady ? (
                     <Loader />
                   ) : (
@@ -202,7 +232,7 @@ const OrderScreen = ({ match, history }) => {
                 userInfo.isAdmin &&
                 order.isPaid &&
                 !order.isDelivered && (
-                  <ListGroup.Item>
+                  <ListGroup.Item className="summaryRow border-0">
                     <Button
                       type="button"
                       className="btn btn-block"
@@ -214,7 +244,7 @@ const OrderScreen = ({ match, history }) => {
             </ListGroup>
           </Card>
         </Col>
-      </Row>
+      </StyledRow>
     </>
   );
 };

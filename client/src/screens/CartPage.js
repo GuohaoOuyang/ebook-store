@@ -10,12 +10,13 @@ import {
   Card,
   Container,
 } from "react-bootstrap";
-import Message from "../components/Message";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import SigninModal from "../components/SigninModal";
 import UpdateEmailModal from "../components/UpdateEmailModal";
 import styled from "styled-components";
-import { saveShippingAddress } from "../actions/cartActions";
+import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
+import Snackbar from "../components/Snackbar";
 
 const StyledRow = styled(Row)`
   margin-left: 20vw;
@@ -33,6 +34,11 @@ const StyledRow = styled(Row)`
     font-size: 1.5em;
     margin-bottom: 1em;
     color: ${(props) => props.theme.palette.lightblack};
+  }
+  .alert {
+    padding: 5px 5px;
+    background-color: rgb(247, 248, 251);
+    margin: 0;
   }
   .title {
     font-family: "Metropolis";
@@ -79,6 +85,20 @@ const CheckoutButton = styled.button`
   width: 100%;
 `;
 
+const ChangeButton = styled.button`
+  border: none;
+  background-color: transparent;
+  color: ${(props) => props.theme.palette.lightblack};
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+  font-family: "Sentinel";
+  font-size: 0.8em;
+  &:focus {
+    outline: none;
+  }
+`;
+
 const RemoveButton = styled.button`
   border: none;
   background-color: transparent;
@@ -94,6 +114,12 @@ const RemoveButton = styled.button`
   &:focus {
     outline: none;
   }
+`;
+
+const StyledEmail = styled(Alert)`
+  border: none;
+  font-family: "Metropolis";
+  font-size: 1em;
 `;
 
 const CartScreen = ({ match, location, history }) => {
@@ -112,14 +138,18 @@ const CartScreen = ({ match, location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+
   useEffect(() => {
     if (productId) {
       dispatch(addToCart(productId, qty));
     }
-    // if (userInfo) {
-    //   dispatch(saveShippingAddress(userInfo.email));
-    // }
-  }, [dispatch, productId, qty, shippingAddress]);
+    if (success) {
+      history.push(`/order/${order._id}`);
+      dispatch({ type: ORDER_CREATE_RESET });
+    }
+  }, [dispatch, productId, qty, success, history, order]);
 
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id));
@@ -127,7 +157,16 @@ const CartScreen = ({ match, location, history }) => {
 
   const checkoutHandler = () => {
     if (userInfo) {
-      history.push("/shipping");
+      dispatch(
+        createOrder({
+          orderItems: cart.cartItems,
+          shippingAddress: cart.shippingAddress,
+          paymentMethod: cart.paymentMethod,
+          itemsPrice: cart.itemsPrice,
+          taxPrice: cart.taxPrice,
+          totalPrice: cart.totalPrice,
+        })
+      );
     } else {
       setModalShow(true);
     }
@@ -146,19 +185,6 @@ const CartScreen = ({ match, location, history }) => {
   cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.taxPrice)).toFixed(
     2
   );
-
-  // const placeOrderHandler = () => {
-  //   dispatch(
-  //     createOrder({
-  //       orderItems: cart.cartItems,
-  //       shippingAddress: cart.shippingAddress,
-  //       paymentMethod: cart.paymentMethod,
-  //       itemsPrice: cart.itemsPrice,
-  //       taxPrice: cart.taxPrice,
-  //       totalPrice: cart.totalPrice,
-  //     })
-  //   )
-  // }
 
   return (
     <StyledRow>
@@ -179,11 +205,50 @@ const CartScreen = ({ match, location, history }) => {
         <>
           <Col md={8}>
             <h1>{userInfo ? userInfo.name + "'s" : "Your"} Shopping Cart</h1>
+            {userInfo && (
+              <>
+                <ListGroup variant="flush">
+                  <ListGroup.Item className="border-0 alert">
+                    <StyledEmail>
+                      <Row>
+                        <Col>
+                          <p>
+                            Shipping {cartItems.length} Items to this Address
+                          </p>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col xs={8}>
+                          {shippingAddress &&
+                          Object.keys(shippingAddress).length > 0
+                            ? shippingAddress
+                            : null}
+                        </Col>
+                        <Col xs={4}>
+                          <ChangeButton
+                            type="button"
+                            className="btn-block"
+                            onClick={() => setEmailUpdated(true)}>
+                            Change
+                          </ChangeButton>
+                        </Col>
+                      </Row>
+                    </StyledEmail>
+                  </ListGroup.Item>
+                  <ListGroup.Item className="border-0">
+                    <UpdateEmailModal
+                      show={emailUpdated}
+                      onHide={() => setEmailUpdated(false)}
+                    />
+                  </ListGroup.Item>
+                </ListGroup>
+              </>
+            )}
             <ListGroup variant="flush">
               {cartItems.map((item) => (
                 <ListGroup.Item key={item.product}>
                   <Row>
-                    <Col className="pic" md={2}>
+                    <Col md={2}>
                       <Image src={item.image} alt={item.name} fluid rounded />
                     </Col>
                     <Col md={6}>
@@ -255,36 +320,10 @@ const CartScreen = ({ match, location, history }) => {
                     show={modalShow}
                     onHide={() => setModalShow(false)}
                   />
+                  {error && <Snackbar show={true}>{error}</Snackbar>}
                 </ListGroup.Item>
               </ListGroup>
             </StyledCard>
-            {userInfo && (
-              <>
-                <ListGroup variant="flush">
-                  <ListGroup.Item className="border-0">
-                    <Alert variant="secondary">
-                      <p>Shipping {cartItems.length} Items to this Address</p>
-                      {shippingAddress &&
-                      Object.keys(shippingAddress).length > 0
-                        ? shippingAddress
-                        : null}
-                    </Alert>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="border-0">
-                    <CheckoutButton
-                      type="button"
-                      className="btn-block"
-                      onClick={() => setEmailUpdated(true)}>
-                      Update the Address
-                    </CheckoutButton>
-                    <UpdateEmailModal
-                      show={emailUpdated}
-                      onHide={() => setEmailUpdated(false)}
-                    />
-                  </ListGroup.Item>
-                </ListGroup>
-              </>
-            )}
           </Col>
         </>
       )}

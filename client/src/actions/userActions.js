@@ -26,7 +26,10 @@ import {
   USER_UPDATE_REQUEST,
 } from "../constants/userConstants";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstants";
-import { CART_SAVE_SHIPPING_ADDRESS } from "../constants/cartConstants";
+import {
+  CART_SAVE_SHIPPING_ADDRESS,
+  CART_SAVE_PAYMENT_METHOD,
+} from "../constants/cartConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -56,6 +59,13 @@ export const login = (email, password) => async (dispatch) => {
       payload: data.email,
     });
 
+    dispatch({
+      type: CART_SAVE_PAYMENT_METHOD,
+      payload: "PayPal",
+    });
+
+    localStorage.setItem("shippingAddress", JSON.stringify(data.email));
+    localStorage.setItem("paymentMethod", JSON.stringify("PayPal"));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({

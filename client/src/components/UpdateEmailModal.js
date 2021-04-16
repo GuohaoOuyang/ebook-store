@@ -64,16 +64,6 @@ const UpdateEmailModal = (props) => {
 
   const dispatch = useDispatch();
 
-  // const userLogin = useSelector((state) => state.userLogin);
-  // const { loading, error, userInfo } = userLogin;
-
-  // //   useEffect(() => {
-  // //     if (userInfo) {
-  // //       props.onHide();
-  // //     }
-  // //     //eslint-disable-next-line react-hooks/exhaustive-deps
-  // //   }, [userInfo]);
-
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(saveShippingAddress(address));
