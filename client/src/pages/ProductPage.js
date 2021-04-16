@@ -7,6 +7,8 @@ import Meta from "../components/Meta";
 import { listProductDetails } from "../actions/productActions";
 import styled from "styled-components";
 import ScrollToTopOnMount from "../components/ScrollToTopOnMount";
+import SidebarModal from "../components/SidebarModal";
+import { addToCart } from "../actions/cartActions";
 
 const StyledLoader = styled.div`
   margin-top: 20%;
@@ -82,6 +84,10 @@ const ProductScreen = ({ history, match }) => {
 
   const [open, setOpen] = useState(false);
 
+  const [cartModal, setCartModal] = useState(false);
+
+  const qty = 1;
+
   useEffect(() => {
     if (!product._id || product._id !== match.params.id) {
       dispatch(listProductDetails(match.params.id));
@@ -90,7 +96,9 @@ const ProductScreen = ({ history, match }) => {
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}`);
+    dispatch(addToCart(product._id, qty));
+    setCartModal(true);
+    // history.push(`/cart/${match.params.id}`);
   };
 
   return (
@@ -130,9 +138,15 @@ const ProductScreen = ({ history, match }) => {
                   <StyledButton
                     className="btn-block"
                     type="button"
+                    data-toggle="modal"
+                    data-target="#rightModal"
                     onClick={addToCartHandler}>
                     Add To Cart
                   </StyledButton>
+                  <SidebarModal
+                    show={cartModal}
+                    onHide={() => setCartModal(false)}
+                  />
                 </ListGroup.Item>
                 <ListGroup.Item className="border-0">
                   <CustomedRow>

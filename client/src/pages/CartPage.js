@@ -10,7 +10,7 @@ import {
   Card,
   Container,
 } from "react-bootstrap";
-import { addToCart, removeFromCart } from "../actions/cartActions";
+import { removeFromCart } from "../actions/cartActions";
 import SigninModal from "../components/SigninModal";
 import UpdateEmailModal from "../components/UpdateEmailModal";
 import styled from "styled-components";
@@ -123,9 +123,9 @@ const StyledEmail = styled(Alert)`
 `;
 
 const CartScreen = ({ match, location, history }) => {
-  const productId = match.params.id;
+  // const productId = match.params.id;
 
-  const qty = location.search ? Number(location.search.split("=")[1]) : 1;
+  // const qty = location.search ? Number(location.search.split("=")[1]) : 1;
 
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
@@ -142,14 +142,14 @@ const CartScreen = ({ match, location, history }) => {
   const { order, success, error } = orderCreate;
 
   useEffect(() => {
-    if (productId) {
-      dispatch(addToCart(productId, qty));
-    }
+    // if (productId) {
+    //   dispatch(addToCart(productId, qty));
+    // }
     if (success) {
       history.push(`/order/${order._id}`);
       dispatch({ type: ORDER_CREATE_RESET });
     }
-  }, [dispatch, productId, qty, success, history, order]);
+  }, [dispatch, success, history, order]);
 
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id));
