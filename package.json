@@ -8,6 +8,7 @@
     "start": "node server/app",
     "server": "nodemon server/app",
     "client": "npm start --prefix client",
+    "client-install": "npm install --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "npm run build --prefix client"
   },
