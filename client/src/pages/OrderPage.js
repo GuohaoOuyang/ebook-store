@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import styled from "styled-components";
 import Snackbar from "../components/Snackbar";
+import { CheckCircleIcon } from "react-line-awesome";
 import {
   getOrderDetails,
   payOrder,
@@ -76,6 +77,19 @@ const StyledLoader = styled.div`
   text-align: center;
 `;
 
+const PaidBadge = styled(Alert)`
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(247, 248, 251);
+  color: rgb(62, 98, 8);
+  font-family: "Sentinel";
+`;
+
 const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
 
@@ -112,6 +126,10 @@ const OrderScreen = ({ match, history }) => {
       document.body.appendChild(script);
     };
 
+    if (successPay) {
+      history.push(`/order/${order._id}/success`);
+    }
+
     if (!order || successPay || successDeliver || order._id !== orderId) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
@@ -122,8 +140,6 @@ const OrderScreen = ({ match, history }) => {
       } else {
         setSdkReady(true);
       }
-    } else if (order.isPaid) {
-      history.push(`/order/${order._id}/success`);
     }
 
     //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -218,7 +234,9 @@ const OrderScreen = ({ match, history }) => {
               {!order.isPaid && (
                 <ListGroup.Item className="summaryRow border-0">
                   {!sdkReady ? (
-                    <Loader />
+                    <StyledLoader>
+                      <Loader />
+                    </StyledLoader>
                   ) : (
                     <PayPalButton
                       amount={order.totalPrice}
@@ -227,7 +245,12 @@ const OrderScreen = ({ match, history }) => {
                   )}
                 </ListGroup.Item>
               )}
-              {loadingDeliver && <Loader />}
+
+              {loadingDeliver && (
+                <StyledLoader>
+                  <Loader />
+                </StyledLoader>
+              )}
               {userInfo &&
                 userInfo.isAdmin &&
                 order.isPaid &&
@@ -243,6 +266,12 @@ const OrderScreen = ({ match, history }) => {
                 )}
             </ListGroup>
           </Card>
+          {order.isPaid && (
+            <PaidBadge>
+              <CheckCircleIcon className="la-lg" />
+              <strong>Order Paid!</strong>
+            </PaidBadge>
+          )}
         </Col>
       </StyledRow>
     </>

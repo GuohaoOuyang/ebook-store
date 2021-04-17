@@ -35,7 +35,7 @@ const App = () => {
           <Route path="/cart" component={CartPage} />
           <Route path="/order/:id" component={OrderPage} exact />
           <Route path="/order/:id/success" component={OrderSuccessPage} />
-          <Route path="/register" component={SignupPage} />
+          <Route path="/register/:email" component={SignupPage} exact />
           <Route path="/profile" component={ProfileScreen} />
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />

@@ -18,6 +18,12 @@ const StyledCard = styled(Card)`
     font-family: "Sentinel";
     font-size: 0.8em;
   }
+  .card-body {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
 `;
 const Product = ({ product }) => {
   return (
@@ -28,7 +34,7 @@ const Product = ({ product }) => {
       <Card.Body>
         <Link className="link" to={`/product/${product._id}`}>
           <Card.Title className="title" as="div">
-            <strong>{product.name}</strong>
+            {product.name}
           </Card.Title>
         </Link>
         <Card.Text as="h3" className="price">
@@ -36,7 +42,7 @@ const Product = ({ product }) => {
         </Card.Text>
         <hr className="mt-1 mb-3" />
         <Card.Text as="h3" className="title">
-          <strong>By Aidan</strong>
+          by {product.author}
         </Card.Text>
       </Card.Body>
     </StyledCard>

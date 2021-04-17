@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col, Modal, Container } from "react-bootstrap";
+import { Form, Row, Col, Modal, Container, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Snackbar from "./Snackbar";
-import Loader from "./Loader";
-import { login } from "../actions/userActions";
 import styled from "styled-components";
-import leftbook from "../utils/images/leftbooks.jpeg";
+import leftbook from "../utils/images/leftbooks2.jpeg";
+import { checkEmail } from "../actions/userActions";
+import { useHistory } from "react-router-dom";
 
 const StyledModal = styled(Modal)`
   .show-grid {
@@ -23,6 +23,12 @@ const StyledModal = styled(Modal)`
     font-family: "Metropolis";
     font-size: 0.7em;
     color: ${(props) => props.theme.palette.lightblack};
+  }
+  .emailLabel {
+    margin-bottom: 0;
+    font-family: "Metropolis";
+    font-size: 0.8em;
+    color: rgb(118, 118, 118);
   }
 `;
 
@@ -65,38 +71,35 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledLoader = styled.div`
-  margin-top: 20%;
-  text-align: center;
-`;
-
-const SigninModal = (props) => {
+const SignupModal = (props) => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const { handleSignUp, ...rest } = props;
+  const { handleSignIn, ...rest } = props;
+
+  let history = useHistory();
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const userCheck = useSelector((state) => state.userCheck);
+  const { loading, error, checkedEmail } = userCheck;
 
-  useEffect(() => {
-    if (userInfo) {
-      props.onHide();
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo]);
+  const signInTransition = () => {
+    handleSignIn();
+    rest.onHide();
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+    dispatch(checkEmail(email));
   };
 
-  const signUpTransition = () => {
-    handleSignUp();
-    rest.onHide();
-  };
+  useEffect(() => {
+    if (checkedEmail) {
+      rest.onHide();
+      history.push(`/register/${checkedEmail}`);
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkedEmail]);
 
   return (
     <StyledModal {...rest} size="lg" centered>
@@ -109,38 +112,37 @@ const SigninModal = (props) => {
             <Col
               xs={6}
               className="pl-0 pr-0 d-flex flex-column align-items-center justify-content-center">
-              <h2>Welcome back!</h2>
-              <p>Thousands of books await</p>
-              {loading && (
-                <StyledLoader>
-                  <Loader />
-                </StyledLoader>
-              )}
+              <h2>Nice to meet you</h2>
+              <p>Sign up to start shopping books today!</p>
               <Form style={{ width: "80%" }} onSubmit={submitHandler}>
                 <Form.Group controlId="email">
+                  <Form.Label className="emailLabel">Email Address</Form.Label>
                   <StyledInput
                     type="email"
-                    placeholder="Email"
+                    placeholder="example@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}></StyledInput>
                 </Form.Group>
-                <Form.Group controlId="password">
-                  <StyledInput
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}></StyledInput>
-                </Form.Group>
-                <StyledButton type="submit" variant="primary">
-                  Continue
-                </StyledButton>
+                {loading ? (
+                  <StyledButton type="submit" variant="primary">
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  </StyledButton>
+                ) : (
+                  <StyledButton type="submit" variant="primary">
+                    Get Started
+                  </StyledButton>
+                )}
                 {error && <Snackbar show={true}>{error}</Snackbar>}
               </Form>
               <p className="my-4">
-                New to Fair?{""}
-                <StyledLink onClick={signUpTransition}>
-                  Create an Account
-                </StyledLink>
+                Already has an account?{""}
+                <StyledLink onClick={signInTransition}>Sign In</StyledLink>
               </p>
             </Col>
           </Row>
@@ -150,4 +152,4 @@ const SigninModal = (props) => {
   );
 };
 
-export default SigninModal;
+export default SignupModal;

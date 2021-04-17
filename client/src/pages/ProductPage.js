@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Image, ListGroup, Collapse } from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Collapse, Spinner } from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
@@ -76,11 +76,14 @@ const CustomedRow = styled(Row)`
   }
 `;
 
-const ProductScreen = ({ history, match }) => {
+const ProductScreen = ({ match }) => {
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+
+  const cart = useSelector((state) => state.cart);
+  const { loading: loadingCart } = cart;
 
   const [open, setOpen] = useState(false);
 
@@ -98,7 +101,6 @@ const ProductScreen = ({ history, match }) => {
   const addToCartHandler = () => {
     dispatch(addToCart(product._id, qty));
     setCartModal(true);
-    // history.push(`/cart/${match.params.id}`);
   };
 
   return (
@@ -126,23 +128,44 @@ const ProductScreen = ({ history, match }) => {
             <Col md={6}>
               <ListGroup variant="flush">
                 <ListGroup.Item className="border-0">
-                  <h3 className="title">{product.name}</h3>
+                  <h3 className="title">
+                    <strong>{product.name}</strong>
+                  </h3>
                 </ListGroup.Item>
                 <ListGroup.Item className="border-0">
-                  <p className="author">By Aidan</p>
+                  <p className="author">
+                    by <strong>{product.author}</strong>
+                  </p>
                 </ListGroup.Item>
                 <ListGroup.Item className="border-0">
                   <p className="author">${product.price}</p>
                 </ListGroup.Item>
                 <ListGroup.Item className="border-0">
-                  <StyledButton
-                    className="btn-block"
-                    type="button"
-                    data-toggle="modal"
-                    data-target="#rightModal"
-                    onClick={addToCartHandler}>
-                    Add To Cart
-                  </StyledButton>
+                  {loadingCart ? (
+                    <StyledButton
+                      className="btn-block"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#rightModal"
+                      onClick={addToCartHandler}>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    </StyledButton>
+                  ) : (
+                    <StyledButton
+                      className="btn-block"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#rightModal"
+                      onClick={addToCartHandler}>
+                      Add To Cart
+                    </StyledButton>
+                  )}
                   <SidebarModal
                     show={cartModal}
                     onHide={() => setCartModal(false)}
@@ -155,7 +178,8 @@ const ProductScreen = ({ history, match }) => {
                         className="desbox"
                         id="collapse-description"
                         aria-expanded={open}>
-                        About: {product.description}
+                        <strong>About: </strong>
+                        {product.description}
                       </Col>
                     </Collapse>
                   </CustomedRow>

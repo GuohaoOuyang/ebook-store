@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Jumbotron } from "react-bootstrap";
 import styled from "styled-components";
 import bookImage from "../utils/images/book.jpeg";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import SigninModal from "./SigninModal";
+import SignupModal from "./SignupModal";
 
 const StyledJumbotron = styled(Jumbotron)`
   background-image: url(${bookImage});
@@ -26,16 +27,43 @@ const StyledJumbotron = styled(Jumbotron)`
     color: ${(props) => props.theme.palette.lightblack};
     font-family: "Metropolis";
     font-size: 0.8em;
-    border-style: none;
-    outline: none !important;
+    border: none;
+    outline: none;
     margin-top: 1em;
     padding: 1em 4em;
+    transition: all 0.5s;
+    span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    span: after {
+      content: "\\20D7";
+      position: absolute;
+      opacity: 0;
+      font-size: 2em;
+      top: 0;
+      right: -0.4em;
+      transition: 0.5s;
+    }
+    :hover span {
+      transform: translate3d(-0.5em, 0, 0);
+    }
+    :hover span: after {
+      opacity: 1;
+      right: -0.8em;
+    }
   }
 `;
 
 const ProductBanner = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const [signupModal, setSignupModal] = useState(false);
+
+  const [signinModal, setSigninModal] = useState(false);
 
   return (
     <StyledJumbotron
@@ -45,9 +73,21 @@ const ProductBanner = () => {
       <h1>for books</h1>
       <p>Shop New &amp; Hot books, all in one place.</p>
       {!userInfo && (
-        <Link to="/register">
-          <button>Sign Up to Shop</button>
-        </Link>
+        <>
+          <button onClick={() => setSignupModal(true)}>
+            <span>Sign Up to Shop</span>
+          </button>
+          <SignupModal
+            show={signupModal}
+            onHide={() => setSignupModal(false)}
+            handleSignIn={() => setSigninModal(true)}
+          />
+          <SigninModal
+            show={signinModal}
+            onHide={() => setSigninModal(false)}
+            handleSignUp={() => setSignupModal(true)}
+          />
+        </>
       )}
     </StyledJumbotron>
   );

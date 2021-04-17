@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import { removeFromCart } from "../actions/cartActions";
 import SigninModal from "../components/SigninModal";
-import UpdateEmailModal from "../components/UpdateEmailModal";
+import AddressUpdate from "../components/AddressUpdate";
 import styled from "styled-components";
 import { createOrder } from "../actions/orderActions";
 import { ORDER_CREATE_RESET } from "../constants/orderConstants";
@@ -122,11 +122,7 @@ const StyledEmail = styled(Alert)`
   font-size: 1em;
 `;
 
-const CartScreen = ({ match, location, history }) => {
-  // const productId = match.params.id;
-
-  // const qty = location.search ? Number(location.search.split("=")[1]) : 1;
-
+const CartScreen = ({ history }) => {
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
 
@@ -142,9 +138,6 @@ const CartScreen = ({ match, location, history }) => {
   const { order, success, error } = orderCreate;
 
   useEffect(() => {
-    // if (productId) {
-    //   dispatch(addToCart(productId, qty));
-    // }
     if (success) {
       history.push(`/order/${order._id}`);
       dispatch({ type: ORDER_CREATE_RESET });
@@ -236,7 +229,7 @@ const CartScreen = ({ match, location, history }) => {
                     </StyledEmail>
                   </ListGroup.Item>
                   <ListGroup.Item className="border-0">
-                    <UpdateEmailModal
+                    <AddressUpdate
                       show={emailUpdated}
                       onHide={() => setEmailUpdated(false)}
                     />

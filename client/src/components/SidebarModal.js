@@ -62,13 +62,14 @@ const SideModal = styled(Modal)`
 
 const CartButton = styled.button`
   background-color: rgba(0, 0, 0, 0.9);
-  font-size: 1em;
+  font-size: 0.8em;
+  font-weight: 600;
   color: white;
   font-family: "Metropolis";
   border-style: none;
   outline: none !important;
-  padding: 0.4em 2em;
-  margin-top: 1em;
+  padding: 0.8em 2em;
+  margin-top: 2em;
   width: 100%;
   transition: all 0.2s ease;
   &:hover {
@@ -78,13 +79,14 @@ const CartButton = styled.button`
 
 const ContinueButton = styled.button`
   background-color: white;
-  font-size: 1em;
+  font-size: 0.8em;
   color: black;
+  font-weight: 600;
   font-family: "Metropolis";
   outline: none !important;
-  padding: 0.4em 2em;
+  padding: 0.8em 2em;
   border: 1px solid black;
-  margin-top: 1em;
+  margin-top: 2em;
   width: 100%;
   transition: all 0.2s ease;
   &:hover {
@@ -102,7 +104,11 @@ const SidebarModal = (props) => {
     cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
   return (
-    <SideModal {...props} id="rightModal" aria-hidden="true">
+    <SideModal
+      {...props}
+      id="rightModal"
+      aria-hidden="true"
+      aria-labelledby="right-side-bar">
       <Modal.Header className="header" closeButton>
         <Modal.Title>CART</Modal.Title>
       </Modal.Header>

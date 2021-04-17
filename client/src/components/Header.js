@@ -9,6 +9,7 @@ import { ShoppingCartIcon } from "react-line-awesome";
 import SearchBox from "./SearchBox";
 import { logout } from "../actions/userActions";
 import SigninModal from "./SigninModal";
+import SignupModal from "./SignupModal";
 
 const StyledWrap = styled.div`
   .navbar {
@@ -26,6 +27,8 @@ const StyledWrap = styled.div`
   .account {
     font-family: "Metropolis";
     font-size: 0.8em;
+    background-color: transparent;
+    color: ${(props) => props.theme.palette.darkgrey};
   }
 `;
 
@@ -60,7 +63,9 @@ const StyledButton = styled.button`
 const Header = () => {
   const dispatch = useDispatch();
 
-  const [modalShow, setModalShow] = useState(false);
+  const [signinModal, setSigninModal] = useState(false);
+
+  const [signupModal, setSignupModal] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
 
@@ -95,12 +100,31 @@ const Header = () => {
                 {userInfo ? (
                   <>
                     <StyledUser className="my-auto">
-                      Hello, {userInfo.name}
+                      Hello, {userInfo.firstName}
                     </StyledUser>
                     <NavDropdown
                       title="Account"
                       id="collasible-nav-dropdown"
                       className="account">
+                      {userInfo.isAdmin && (
+                        <>
+                          <LinkContainer to="/admin/userlist">
+                            <NavDropdown.Item className="account">
+                              users
+                            </NavDropdown.Item>
+                          </LinkContainer>
+                          <LinkContainer to="/admin/productlist">
+                            <NavDropdown.Item className="account">
+                              products
+                            </NavDropdown.Item>
+                          </LinkContainer>
+                          <LinkContainer to="/admin/orderlist">
+                            <NavDropdown.Item className="account">
+                              orders
+                            </NavDropdown.Item>
+                          </LinkContainer>
+                        </>
+                      )}
                       <LinkContainer to="/profile">
                         <NavDropdown.Item className="account">
                           order history
@@ -117,30 +141,23 @@ const Header = () => {
                   <>
                     <Nav.Link
                       className="signin"
-                      onClick={() => setModalShow(true)}>
+                      onClick={() => setSigninModal(true)}>
                       Sign In
                     </Nav.Link>
                     <SigninModal
-                      show={modalShow}
-                      onHide={() => setModalShow(false)}
+                      show={signinModal}
+                      onHide={() => setSigninModal(false)}
+                      handleSignUp={() => setSignupModal(true)}
                     />
-                    <LinkContainer to="/register">
-                      <StyledButton>Sign Up to Shop</StyledButton>
-                    </LinkContainer>
+                    <StyledButton onClick={() => setSignupModal(true)}>
+                      Sign Up to Shop
+                    </StyledButton>
+                    <SignupModal
+                      show={signupModal}
+                      onHide={() => setSignupModal(false)}
+                      handleSignIn={() => setSigninModal(true)}
+                    />
                   </>
-                )}
-                {userInfo && userInfo.isAdmin && (
-                  <NavDropdown title="Admin" id="adminmenu">
-                    <LinkContainer to="/admin/userlist">
-                      <NavDropdown.Item>Users</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/productlist">
-                      <NavDropdown.Item>Products</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/orderlist">
-                      <NavDropdown.Item>Orders</NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
                 )}
               </Nav>
             </Navbar.Collapse>

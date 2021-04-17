@@ -6,9 +6,9 @@ import {
   Container,
   FormControl,
   FormLabel,
+  Spinner,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/Loader";
 import { register } from "../actions/userActions";
 import styled from "styled-components";
 import Snackbar from "../components/Snackbar";
@@ -76,13 +76,13 @@ const StyledButton = styled.button`
 `;
 
 const schema = yup.object().shape({
-  name: yup
+  firstName: yup
     .string()
-    .min(3, "Must be more than two characters long")
+    .min(2, "Must be more than two characters long")
     .required("Must be filled out"),
-  email: yup
+  lastName: yup
     .string()
-    .email("Must be a valid email adress")
+    .min(2, "Must be more than two characters long")
     .required("Must be filled out"),
   password: yup
     .string()
@@ -94,8 +94,10 @@ const schema = yup.object().shape({
     .required("Must be filled out"),
 });
 
-const RegisterScreen = ({ location, history }) => {
+const RegisterScreen = ({ location, history, match }) => {
   const dispatch = useDispatch();
+
+  const checkedEmail = match.params.email;
 
   const userRegister = useSelector((state) => state.userRegister);
   const { loading, error, userInfo } = userRegister;
@@ -112,7 +114,6 @@ const RegisterScreen = ({ location, history }) => {
     <StyledContainer>
       <Row className="totalHeight d-flex flex-cloumn justify-content-md-center align-items-md-center">
         <Col xs={12} md={4}>
-          {loading && <Loader />}
           <Row>
             <Col>
               <h2>Welcome!</h2>
@@ -122,11 +123,18 @@ const RegisterScreen = ({ location, history }) => {
           <Formik
             validationSchema={schema}
             onSubmit={(values) => {
-              dispatch(register(values.name, values.email, values.password));
+              dispatch(
+                register(
+                  values.firstName,
+                  values.lastName,
+                  checkedEmail,
+                  values.password
+                )
+              );
             }}
             initialValues={{
-              name: "",
-              email: "",
+              firstName: "",
+              lastName: "",
               password: "",
               confirmPassword: "",
             }}>
@@ -139,33 +147,33 @@ const RegisterScreen = ({ location, history }) => {
               errors,
             }) => (
               <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="name">
-                  <StyledLabel>Name</StyledLabel>
+                <Form.Group controlId="firstName">
+                  <StyledLabel>First Name</StyledLabel>
                   <StyledInput
-                    type="name"
-                    name="name"
-                    placeholder="Enter name"
-                    value={values.name}
+                    type="text"
+                    name="firstName"
+                    placeholder="Enter first name"
+                    value={values.firstName}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  {touched.name && errors.name ? (
-                    <StyledError>{errors.name}</StyledError>
+                  {touched.firstName && errors.firstName ? (
+                    <StyledError>{errors.firstName}</StyledError>
                   ) : null}
                 </Form.Group>
 
-                <Form.Group controlId="email">
-                  <StyledLabel>Email Address</StyledLabel>
+                <Form.Group controlId="lastName">
+                  <StyledLabel>Last Name</StyledLabel>
                   <StyledInput
-                    type="email"
+                    type="text"
+                    name="lastName"
                     placeholder="Enter email"
-                    name="email"
-                    value={values.email}
+                    value={values.lastName}
                     onBlur={handleBlur}
                     onChange={handleChange}
                   />
-                  {touched.email && errors.email ? (
-                    <StyledError>{errors.email}</StyledError>
+                  {touched.lastName && errors.lastName ? (
+                    <StyledError>{errors.lastName}</StyledError>
                   ) : null}
                 </Form.Group>
 
@@ -198,9 +206,20 @@ const RegisterScreen = ({ location, history }) => {
                     <StyledError>{errors.confirmPassword}</StyledError>
                   ) : null}
                 </Form.Group>
-                <StyledButton type="submit" variant="primary">
-                  Next
-                </StyledButton>
+                {loading ? (
+                  <StyledButton type="submit">
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  </StyledButton>
+                ) : (
+                  <StyledButton type="submit">Next</StyledButton>
+                )}
+
                 {error && <Snackbar show={true}>{error}</Snackbar>}
               </Form>
             )}

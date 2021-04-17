@@ -24,6 +24,9 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_REQUEST,
+  USER_EMAIL_REQUEST,
+  USER_EMAIL_SUCCESS,
+  USER_EMAIL_FAIL,
 } from "../constants/userConstants";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstants";
 import {
@@ -90,7 +93,33 @@ export const logout = () => (dispatch) => {
   document.location.href = "/";
 };
 
-export const register = (name, email, password) => async (dispatch) => {
+export const checkEmail = (email) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_EMAIL_REQUEST,
+    });
+
+    const { data } = await axios.get(`/apiUrl/api/users/${email}`);
+    console.log(data);
+
+    dispatch({
+      type: USER_EMAIL_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_EMAIL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const register = (firstName, lastName, email, password) => async (
+  dispatch
+) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -104,7 +133,7 @@ export const register = (name, email, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       "/apiUrl/api/users",
-      { name, email, password },
+      { firstName, lastName, email, password },
       config
     );
 
@@ -118,6 +147,18 @@ export const register = (name, email, password) => async (dispatch) => {
       payload: data,
     });
 
+    dispatch({
+      type: CART_SAVE_SHIPPING_ADDRESS,
+      payload: data.email,
+    });
+
+    dispatch({
+      type: CART_SAVE_PAYMENT_METHOD,
+      payload: "PayPal",
+    });
+
+    localStorage.setItem("shippingAddress", JSON.stringify(data.email));
+    localStorage.setItem("paymentMethod", JSON.stringify("PayPal"));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
