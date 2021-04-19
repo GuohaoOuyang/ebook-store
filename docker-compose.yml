@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  mern-app:
+    container_name: book-store
+    restart: always
+    build: .
+    ports:
+      - "80:3000"
