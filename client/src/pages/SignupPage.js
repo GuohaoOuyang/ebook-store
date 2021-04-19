@@ -94,7 +94,7 @@ const schema = yup.object().shape({
     .required("Must be filled out"),
 });
 
-const RegisterScreen = ({ location, history, match }) => {
+const SignupPage = ({ location, history, match }) => {
   const dispatch = useDispatch();
 
   const checkedEmail = match.params.email;
@@ -230,4 +230,4 @@ const RegisterScreen = ({ location, history, match }) => {
   );
 };
 
-export default RegisterScreen;
+export default SignupPage;

@@ -31,7 +31,7 @@ const StyledRow = styled(Row)`
   }
 `;
 
-const HomeScreen = ({ match }) => {
+const HomePage = ({ match }) => {
   const keyword = match.params.keyword;
 
   const pageNumber = match.params.pageNumber || 1;
@@ -96,4 +96,4 @@ const HomeScreen = ({ match }) => {
   );
 };
 
-export default HomeScreen;
+export default HomePage;

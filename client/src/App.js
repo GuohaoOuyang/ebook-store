@@ -10,7 +10,7 @@ import CartPage from "./pages/CartPage";
 import SignupPage from "./pages/SignupPage";
 import OrderPage from "./pages/OrderPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
-import ProfileScreen from "./pages/ProfileScreen";
+import OrderHistoryPage from "./pages/OrderHistoryPage";
 import UserListScreen from "./pages/UserListScreen";
 import UserEditScreen from "./pages/UserEditScreen";
 import ProductListScreen from "./pages/ProductListScreen";
@@ -36,7 +36,7 @@ const App = () => {
           <Route path="/order/:id" component={OrderPage} exact />
           <Route path="/order/:id/success" component={OrderSuccessPage} />
           <Route path="/register/:email" component={SignupPage} exact />
-          <Route path="/profile" component={ProfileScreen} />
+          <Route path="/orderhistory" component={OrderHistoryPage} />
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />
           <Route

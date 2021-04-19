@@ -125,7 +125,7 @@ const Header = () => {
                           </LinkContainer>
                         </>
                       )}
-                      <LinkContainer to="/profile">
+                      <LinkContainer to="/orderhistory">
                         <NavDropdown.Item className="account">
                           order history
                         </NavDropdown.Item>

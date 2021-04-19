@@ -90,7 +90,7 @@ const PaidBadge = styled(Alert)`
   font-family: "Sentinel";
 `;
 
-const OrderScreen = ({ match, history }) => {
+const OrderPage = ({ match, history }) => {
   const orderId = match.params.id;
 
   const [sdkReady, setSdkReady] = useState(false);
@@ -272,10 +272,16 @@ const OrderScreen = ({ match, history }) => {
               <strong>Order Paid!</strong>
             </PaidBadge>
           )}
+          {order.isDelivered && (
+            <PaidBadge>
+              <CheckCircleIcon className="la-lg" />
+              <strong>Order Delivered!</strong>
+            </PaidBadge>
+          )}
         </Col>
       </StyledRow>
     </>
   );
 };
 
-export default OrderScreen;
+export default OrderPage;

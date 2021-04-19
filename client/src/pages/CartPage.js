@@ -122,7 +122,7 @@ const StyledEmail = styled(Alert)`
   font-size: 1em;
 `;
 
-const CartScreen = ({ history }) => {
+const CartPage = ({ history }) => {
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
 
@@ -324,4 +324,4 @@ const CartScreen = ({ history }) => {
   );
 };
 
-export default CartScreen;
+export default CartPage;

@@ -76,7 +76,7 @@ const CustomedRow = styled(Row)`
   }
 `;
 
-const ProductScreen = ({ match }) => {
+const ProductPage = ({ match }) => {
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
@@ -199,4 +199,4 @@ const ProductScreen = ({ match }) => {
   );
 };
 
-export default ProductScreen;
+export default ProductPage;
