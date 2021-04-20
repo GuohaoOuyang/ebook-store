@@ -60,12 +60,14 @@ const StyledButton = styled.button`
   padding-right: 2em;
 `;
 
-const Header = () => {
+const Header = ({ location }) => {
   const dispatch = useDispatch();
 
   const [signinModal, setSigninModal] = useState(false);
 
   const [signupModal, setSignupModal] = useState(false);
+
+  const [account, setAccount] = useState("Account");
 
   const userLogin = useSelector((state) => state.userLogin);
 
@@ -80,7 +82,7 @@ const Header = () => {
       <StyledWrap>
         <Navbar className="navbar" expand="md" fixed="top">
           <Container fluid>
-            <LinkContainer to="/">
+            <LinkContainer to="/" onClick={() => setAccount("Account")}>
               <Navbar.Brand>
                 <img src={logo} width="60" alt="fair-logo" />
               </Navbar.Brand>
@@ -90,7 +92,7 @@ const Header = () => {
               <Route
                 render={({ history }) => <SearchBox history={history} />}
               />
-              <LinkContainer to="/cart">
+              <LinkContainer to="/cart" onClick={() => setAccount("Account")}>
                 <StyledLink>
                   <ShoppingCartIcon className="cartIcon la-lg" />
                 </StyledLink>
@@ -103,30 +105,38 @@ const Header = () => {
                       Hello, {userInfo.firstName}
                     </StyledUser>
                     <NavDropdown
-                      title="Account"
+                      title={account}
                       id="collasible-nav-dropdown"
                       className="account">
                       {userInfo.isAdmin && (
                         <>
                           <LinkContainer to="/admin/userlist">
-                            <NavDropdown.Item className="account">
+                            <NavDropdown.Item
+                              className="account"
+                              onClick={() => setAccount("users")}>
                               users
                             </NavDropdown.Item>
                           </LinkContainer>
                           <LinkContainer to="/admin/productlist">
-                            <NavDropdown.Item className="account">
+                            <NavDropdown.Item
+                              className="account"
+                              onClick={() => setAccount("products")}>
                               products
                             </NavDropdown.Item>
                           </LinkContainer>
                           <LinkContainer to="/admin/orderlist">
-                            <NavDropdown.Item className="account">
+                            <NavDropdown.Item
+                              className="account"
+                              onClick={() => setAccount("orders")}>
                               orders
                             </NavDropdown.Item>
                           </LinkContainer>
                         </>
                       )}
                       <LinkContainer to="/orderhistory">
-                        <NavDropdown.Item className="account">
+                        <NavDropdown.Item
+                          className="account"
+                          onClick={() => setAccount("order history")}>
                           order history
                         </NavDropdown.Item>
                       </LinkContainer>
