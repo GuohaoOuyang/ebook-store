@@ -197,7 +197,9 @@ const CartPage = ({ history }) => {
       ) : (
         <>
           <Col md={8}>
-            <h1>{userInfo ? userInfo.name + "'s" : "Your"} Shopping Cart</h1>
+            <h1>
+              {userInfo ? userInfo.firstName + "'s" : "Your"} Shopping Cart
+            </h1>
             {userInfo && (
               <>
                 <ListGroup variant="flush">

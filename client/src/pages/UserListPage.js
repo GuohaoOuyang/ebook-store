@@ -40,6 +40,9 @@ const UserListPage = ({ history }) => {
 
   const [adminUpdated, setAdminUpdate] = useState(false);
 
+  const [userid, setUserID] = useState();
+  const [userAdmin, setUserAdmin] = useState(false);
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
@@ -54,6 +57,11 @@ const UserListPage = ({ history }) => {
     if (window.confirm("Are you sure")) {
       dispatch(deleteUser(id));
     }
+  };
+  const adminHandler = (id, admin) => {
+    setAdminUpdate(true);
+    setUserAdmin(admin);
+    setUserID(id);
   };
 
   return (
@@ -79,6 +87,12 @@ const UserListPage = ({ history }) => {
               </tr>
             </thead>
             <tbody>
+              <AdminUpdate
+                show={adminUpdated}
+                onHide={() => setAdminUpdate(false)}
+                userId={userid}
+                admin={userAdmin}
+              />
               {users.map((user) => (
                 <tr key={user._id}>
                   <td className="align-items-center">{user.firstName}</td>
@@ -99,15 +113,10 @@ const UserListPage = ({ history }) => {
                     <Button
                       variant="light"
                       className="btn-sm"
-                      onClick={() => setAdminUpdate(true)}>
+                      onClick={() => adminHandler(user._id, user.isAdmin)}>
                       <i className="fas fa-edit"></i>
                     </Button>
-                    <AdminUpdate
-                      show={adminUpdated}
-                      onHide={() => setAdminUpdate(false)}
-                      userId={user._id}
-                      admin={user.isAdmin}
-                    />
+
                     <Button
                       variant="danger"
                       className="btn-sm"

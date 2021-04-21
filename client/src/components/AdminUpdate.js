@@ -77,7 +77,7 @@ const AdminUpdate = (props) => {
       dispatch({ type: USER_UPDATE_RESET });
       props.onHide();
     }
-  }, [success, dispatch, props]);
+  }, [success, dispatch, props, admin]);
 
   const submitHandler = (e) => {
     e.preventDefault();
