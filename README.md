@@ -45,13 +45,17 @@ A mock eCommerce solution
   ![history_signout](/client/src/utils/images/history_signout.gif)
   <br>
 
+  <hr>
+
+  - **More features about admin users:**
+
 ## Tech Stack
 
 MERN (Mongo, Express, React, Node)
 
 | Other Highlights  |
 | :---------------: |
-|  Redux            |
+|       Redux       |
 |  React-Bootstrap  |
 | styled-components |
 |   formik & jwt    |
