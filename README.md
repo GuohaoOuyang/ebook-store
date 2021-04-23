@@ -47,7 +47,7 @@ A mock eCommerce solution
 
   <hr>
 
-  - **More features about admin users:**
+- **More features about admin users!**
 
 ## Tech Stack
 
