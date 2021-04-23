@@ -51,6 +51,7 @@ MERN (Mongo, Express, React, Node)
 
 | Other Highlights  |
 | :---------------: |
+|  Redux            |
 |  React-Bootstrap  |
 | styled-components |
 |   formik & jwt    |
