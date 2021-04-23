@@ -13,7 +13,7 @@
 
 # Live Preview
 
-[Demo](http://ec2-15-223-64-87.ca-central-1.compute.amazonaws.com/) under construction!
+[Demo](http://ec2-99-79-161-225.ca-central-1.compute.amazonaws.com:3001/)
 
 # About
 
