@@ -15,6 +15,12 @@
 
 [Demo](http://ec2-99-79-161-225.ca-central-1.compute.amazonaws.com:3001/)
 
+```bash
+# Example user
+jackwang@gmail.com
+123456
+```
+
 # About
 
 A mock eCommerce solution
