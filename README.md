@@ -13,7 +13,7 @@
 
 # Live Preview
 
-[Demo](http://ec2-99-79-161-225.ca-central-1.compute.amazonaws.com:3001/)
+**[Demo](http://ec2-99-79-161-225.ca-central-1.compute.amazonaws.com:3001/)**
 
 ```bash
 # Example user
